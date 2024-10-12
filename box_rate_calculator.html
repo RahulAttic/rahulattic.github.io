@@ -101,11 +101,18 @@
 
     <label for="calculation">Select Calculation Type: <span class="mandatory">*</span></label>
     <select id="calculation" name="calculation" required>
-        <option value="normal">Normal (Width + Height)</option>
-        <option value="cf">C/F (2 * Width + Height)</option>
+        <option value="normal">Normal (Single Flap)</option>
+        <option value="cf">C/F (Double Flap))</option>
+    </select>
+
+    <label for="printing">Select Box Type: <span class="mandatory">*</span></label>
+    <select id="printing" name="printing" required>
+        <option value="normal">Normal</option>
+        <option value="printed">Printed (Extraa 3%)</option>
     </select>
     
     <button type="button" onclick="calculateArea()">Calculate Area</button>
+    <p id="result"></p>
 </form>
 
 <p id="result"></p>
@@ -119,6 +126,7 @@ function calculateArea() {
     let height = parseFloat(document.getElementById('height').value);
     let rate = parseFloat(document.getElementById('rate').value);
     let calculationType = document.getElementById('calculation').value;
+    let printingType = document.getElementById('printing').value;
 
     // Check for empty fields
     if (!length || !width || !height || !rate) {
@@ -138,9 +146,12 @@ function calculateArea() {
 
     if (calculationType === 'normal') {
         area = width + height;
+        
     } else if (calculationType === 'cf') {
         area = (2 * width) + height;
+        
     }
+
 
     // Calculate quant as the next even integer greater than or equal to the area
     let quant = Math.ceil(area);
@@ -151,7 +162,12 @@ function calculateArea() {
     let temp2 = temp1 * quant * 2;
     let temp3 = temp2 / 1550.0;
     let price = temp3 * rate;
-
+    
+    if (printingType === 'normal') {
+        price = price;
+    } else if (printingType === 'printed') {
+        price = price *1.03;
+    }
     // Display the results
     document.getElementById('result').innerHTML = `
         <strong>Price:</strong> Rs ${price.toFixed(2)}<br>
